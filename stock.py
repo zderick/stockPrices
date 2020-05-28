@@ -5,6 +5,10 @@ from email.header import Header
 from email.MIMEText import MIMEText
 from email.utils import formataddr
 import json
+from datetime import date
+
+
+
 
 try:
     from urllib.request import urlopen
@@ -26,6 +30,11 @@ change = get_jsonparsed_data(url)[0]['change']
 data = "Name: {}\nPrice: {}\nChange: {}\nChanges Percentage: {}".format(name, price, change, changesPercentage)
 
 
+today = date.today()
+today_formatted = today.strftime("%m/%d/%y")
+
+
+
  
 #Enter email information
 fromaddr = "lynlynlynt@gmail.com"
@@ -41,7 +50,7 @@ msg['From'] = formataddr((str(Header(displayName, 'utf-8')), fromaddr))
 
 
 #Edit subject, message, and reply-to information here
-msg['Subject'] = "Daily Stock Update"
+msg['Subject'] = today_formatted + " Daily Stock Update"
 body = "The stock market has just closed\n\n"
 body = body + data
 # msg.add_header('reply-to', "replyto@gmail.com")
