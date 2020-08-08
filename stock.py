@@ -25,6 +25,11 @@ lastWeek = today - datetime.timedelta(days=OFFSET)
 lastWeekString = lastWeek.strftime("%Y-%m-%d")
 
 
+
+
+
+
+
 url = "https://api.tiingo.com/tiingo/daily/DIA/prices?startDate=LASTWEEK&endDate=TODAY&token=12d898a99f0a48f6c3483cd1f30e8c53dbb854e0"
 url = url.replace("LASTWEEK", lastWeekString).replace("TODAY", todayString)
 
@@ -76,6 +81,18 @@ msg['Subject'] = today_formatted + " Daily Stock Update"
 body = "The stock market has just closed\n\n"
 body = body + data
 # msg.add_header('reply-to', "replyto@gmail.com")
+
+
+
+## DELETE ME!!!
+
+
+import requests
+r = requests.get('https://finnhub.io/api/v1/news?category=general&token=bsn0ifnrh5ret9gkabfg')
+body = body + "\n\n\nNews\n" + json.dumps(r.json(), indent=4)
+
+
+## DELETE ME!!!
 
 
 msg['To'] = ",".join(toaddr)
