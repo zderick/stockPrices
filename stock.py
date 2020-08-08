@@ -67,12 +67,13 @@ today_formatted = today.strftime("%m/%d/%y")
 fromaddr = "lynlynlynt@gmail.com"
 password = "lynlynlyn"
 toaddr = ['mingxin.ou@gmail.com','centuryib100@gmail.com']
+
 # fakeCcList = ['fakecc@gmail.com']
 # bccList = ['bcc@gmail.com']
 displayName = 'Stock Master'
 
 
-msg = MIMEMultipart()
+msg = MIMEMultipart('alternative')
 msg['From'] = formataddr((str(Header(displayName, 'utf-8')), fromaddr))
 
 
@@ -84,20 +85,45 @@ body = body + data
 
 
 
-## DELETE ME!!!
+## News Module
 
 
 import requests
 r = requests.get('https://finnhub.io/api/v1/news?category=general&token=bsn0ifnrh5ret9gkabfg')
-body = body + "\n\n\nNews\n" + json.dumps(r.json(), indent=4)
-
-
-## DELETE ME!!!
+news = "\n\n\nNews\n" + json.dumps(r.json(), indent=4)
 
 
 msg['To'] = ",".join(toaddr)
 # msg['Cc'] = ",".join(fakeCcList)
-msg.attach(MIMEText(body, 'plain'))
+msg.attach(MIMEText(body + news, 'plain'))
+
+
+
+
+## Formatting with HTML
+newsHtmlText = news
+newsHtmlText = newsHtmlText.replace("\n", "<br>")
+newsHtmlText = newsHtmlText.replace("\"headline\"", "<b>\"Headline\"</b>")
+htmlBegin = """\
+<html>
+  <head></head>
+  <body>
+  <pre>
+  <code>
+"""
+htmlEnd = """\
+	</code>
+	</pre>
+  </body>
+</html>
+"""
+
+
+html = MIMEText(body.replace("\n", "<br>") + htmlBegin + newsHtmlText + htmlEnd, 'html')
+msg.attach(html)
+
+
+## Formatting with HTML
 
 server = smtplib.SMTP('smtp.gmail.com', 587)
 server.starttls()
