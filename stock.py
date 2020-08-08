@@ -79,8 +79,8 @@ msg['From'] = formataddr((str(Header(displayName, 'utf-8')), fromaddr))
 
 #Edit subject, message, and reply-to information here
 msg['Subject'] = today_formatted + " Daily Stock Update"
-body = "The stock market has just closed\n\n"
-body = body + data
+stockInfo = "The stock market has just closed\n\n"
+stockInfo = stockInfo + data
 # msg.add_header('reply-to', "replyto@gmail.com")
 
 
@@ -95,7 +95,7 @@ news = "\n\n\nNews\n" + json.dumps(r.json(), indent=4)
 
 msg['To'] = ",".join(toaddr)
 # msg['Cc'] = ",".join(fakeCcList)
-msg.attach(MIMEText(body + news, 'plain'))
+msg.attach(MIMEText(stockInfo + news, 'plain'))
 
 
 
@@ -118,12 +118,10 @@ htmlEnd = """\
 </html>
 """
 
-
-html = MIMEText(body.replace("\n", "<br>") + htmlBegin + newsHtmlText + htmlEnd, 'html')
+html = MIMEText(stockInfo.replace("\n", "<br>") + htmlBegin + newsHtmlText + htmlEnd, 'html')
 msg.attach(html)
 
 
-## Formatting with HTML
 
 server = smtplib.SMTP('smtp.gmail.com', 587)
 server.starttls()
