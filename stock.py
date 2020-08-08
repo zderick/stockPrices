@@ -2,42 +2,52 @@ import requests
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
 from email.header import Header
-
 from email.MIMEText import MIMEText
 from email.utils import formataddr
 import json
-from datetime import date
+import datetime
 
 
 
 
 
-def get_data(response, name):
-   return response.json()[0][name] 
+
+def get_data(response, name, index):
+   return response.json()[index][name] 
+
+TODAY = 1
+YESTERDAY = 0
 
 
-headers = {
-                'Content-Type': 'application/json'
-                        }
-response = requests.get("https://api.tiingo.com/tiingo/daily/DIA/prices?token=12d898a99f0a48f6c3483cd1f30e8c53dbb854e0",
-                                            headers=headers)
+
+
+today = datetime.date.today()
+todayString = today.strftime("%Y-%m-%d")
+yesterday = today - datetime.timedelta(days=1)
+yesterdayString = yesterday.strftime("%Y-%m-%d")
+
+
+url = "https://api.tiingo.com/tiingo/daily/DIA/prices?startDate=YESTERDAY&endDate=TODAY&token=12d898a99f0a48f6c3483cd1f30e8c53dbb854e0"
+url = url.replace("YESTERDAY", yesterdayString).replace("TODAY", todayString)
+
+headers = {'Content-Type': 'application/json'}
+response = requests.get(url,headers=headers)
 
 
 
 
 
 name = "DIA ETF"
-price = get_data(response, 'close')
+price = get_data(response, 'close', TODAY)
 
-change = get_data(response, 'close') - get_data(response, 'open')
-changesPercentage = (change / get_data(response, 'open'))
+change = get_data(response, 'close', TODAY) - get_data(response, 'close', YESTERDAY)
+changesPercentage = (change / get_data(response, 'close', YESTERDAY))
 
 
 
 data = "Name: {}\nPrice: {}\nChange: {}\nChanges Percentage: {:.2%}".format(name, price, change, changesPercentage)
 
 
-today = date.today()
 today_formatted = today.strftime("%m/%d/%y")
 
 
