@@ -1,3 +1,4 @@
+import requests
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
 from email.header import Header
@@ -10,24 +11,30 @@ from datetime import date
 
 
 
-try:
-    from urllib.request import urlopen
-except ImportError:
-    from urllib2 import urlopen
 
-def get_jsonparsed_data(url):
-    response = urlopen(url)
-    data = response.read().decode("utf-8")
-    return json.loads(data)
+def get_data(response, name):
+   return response.json()[0][name] 
 
-url = ("https://financialmodelingprep.com/api/v3/quote/%5EDJI?apikey=a9a0e2e937837eb7414a9dee88b2f09a")
 
-name = get_jsonparsed_data(url)[0]['name']
-price = get_jsonparsed_data(url)[0]['price']
-changesPercentage = get_jsonparsed_data(url)[0]['changesPercentage']
-change = get_jsonparsed_data(url)[0]['change']
+headers = {
+                'Content-Type': 'application/json'
+                        }
+response = requests.get("https://api.tiingo.com/tiingo/daily/DIA/prices?token=12d898a99f0a48f6c3483cd1f30e8c53dbb854e0",
+                                            headers=headers)
 
-data = "Name: {}\nPrice: {}\nChange: {}\nChanges Percentage: {}".format(name, price, change, changesPercentage)
+
+
+
+
+name = "DIA ETF"
+price = get_data(response, 'close')
+
+change = get_data(response, 'close') - get_data(response, 'open')
+changesPercentage = (change / get_data(response, 'open'))
+
+
+
+data = "Name: {}\nPrice: {}\nChange: {}\nChanges Percentage: {:.2%}".format(name, price, change, changesPercentage)
 
 
 today = date.today()
@@ -38,7 +45,7 @@ today_formatted = today.strftime("%m/%d/%y")
  
 #Enter email information
 fromaddr = "lynlynlynt@gmail.com"
-password = ""
+password = "lynlynlyn"
 toaddr = ['mingxin.ou@gmail.com','centuryib100@gmail.com']
 # fakeCcList = ['fakecc@gmail.com']
 # bccList = ['bcc@gmail.com']
