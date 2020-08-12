@@ -30,32 +30,41 @@ lastWeekString = lastWeek.strftime("%Y-%m-%d")
 
 
 
-url = "https://api.tiingo.com/tiingo/daily/DIA/prices?startDate=LASTWEEK&endDate=TODAY&token=12d898a99f0a48f6c3483cd1f30e8c53dbb854e0"
-url = url.replace("LASTWEEK", lastWeekString).replace("TODAY", todayString)
+# url = "https://api.tiingo.com/tiingo/daily/DIA/prices?startDate=LASTWEEK&endDate=TODAY&token=12d898a99f0a48f6c3483cd1f30e8c53dbb854e0"
+# url = url.replace("LASTWEEK", lastWeekString).replace("TODAY", todayString)
 
-headers = {'Content-Type': 'application/json'}
-response = requests.get(url,headers=headers)
-
-
+# headers = {'Content-Type': 'application/json'}
+# response = requests.get(url,headers=headers)
 
 
-TODAY_INDEX = len(response.json()) - 1
-YESTERDAY_INDEX = len(response.json()) - 2
 
 
+# TODAY_INDEX = len(response.json()) - 1
+# YESTERDAY_INDEX = len(response.json()) - 2
+
+
+
+# price = get_data(response, 'close', TODAY_INDEX)
+
+# change = get_data(response, 'close', TODAY_INDEX) - get_data(response, 'close', YESTERDAY_INDEX)
+# changesPercentage = (change / get_data(response, 'close', YESTERDAY_INDEX))
 
 name = "DIA ETF"
-price = get_data(response, 'close', TODAY_INDEX)
+response = requests.get('https://finnhub.io/api/v1/quote?symbol=DIA&token=bsn0ifnrh5ret9gkabfg')
+price = response.json()['c']
+change = response.json()['c'] - response.json()['pc']
+changesPercentage = (change / response.json()['pc'])
 
-change = get_data(response, 'close', TODAY_INDEX) - get_data(response, 'close', YESTERDAY_INDEX)
-changesPercentage = (change / get_data(response, 'close', YESTERDAY_INDEX))
 
 
-if response.json()[TODAY_INDEX]['date'].find(todayString) == -1:
-	data = "The market is actually closed today. \n\nPlease enjoy your holiday! :)"
 
-else:
-	data = "Name: {}\nPrice: {}\nChange: {}\nChanges Percentage: {:.2%}".format(name, price, change, changesPercentage)
+
+# if response.json()['t']['date'].find(todayString) == -1:
+# 	data = "The market is actually closed today. \n\nPlease enjoy your holiday! :)"
+
+# else:
+data = "Name: {}\nPrice: {}\nChange: {}\nChanges Percentage: {:.2%}".format(name, price, change, changesPercentage)
+
 
 
 today_formatted = today.strftime("%m/%d/%y")
