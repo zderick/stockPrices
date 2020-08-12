@@ -12,17 +12,35 @@ import datetime
 
 
 
-def get_data(response, name, index):
-   return response.json()[index][name] 
+# def get_data(response, name, index):
+#    return response.json()[index][name] 
+
+def isHoliday(today):
+	list = [
+	'2020-09-07',
+	'2020-11-26',
+	'2020-12-25',
+	'2021-01-01',
+	'2021-01-18',
+	'2021-02-15',
+	'2021-04-02',
+	'2021-05-31',
+	'2021-07-05',
+	'2021-09-06',
+	'2021-11-25',
+	'2021-12-24'
+	]
+
+	return today in list
 
 
-OFFSET = 6
+# OFFSET = 6
 
 
 today = datetime.date.today()
 todayString = today.strftime("%Y-%m-%d")
-lastWeek = today - datetime.timedelta(days=OFFSET)
-lastWeekString = lastWeek.strftime("%Y-%m-%d")
+# lastWeek = today - datetime.timedelta(days=OFFSET)
+# lastWeekString = lastWeek.strftime("%Y-%m-%d")
 
 
 
@@ -57,13 +75,11 @@ changesPercentage = (change / response.json()['pc'])
 
 
 
-
-
-# if response.json()['t']['date'].find(todayString) == -1:
-# 	data = "The market is actually closed today. \n\nPlease enjoy your holiday! :)"
-
-# else:
-data = "Name: {}\nPrice: {}\nChange: {}\nChanges Percentage: {:.2%}".format(name, price, change, changesPercentage)
+today_formatted = today.strftime("%m/%d/%y")
+if isHoliday(todayString):
+	data = "The market is actually closed on {} \n\nPlease enjoy your holiday! :)".format(today_formatted)
+else:
+	data = "Name: {}\nPrice: {}\nChange: {}\nChanges Percentage: {:.2%}".format(name, price, change, changesPercentage)
 
 
 
