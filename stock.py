@@ -67,11 +67,17 @@ todayString = today.strftime("%Y-%m-%d")
 # change = get_data(response, 'close', TODAY_INDEX) - get_data(response, 'close', YESTERDAY_INDEX)
 # changesPercentage = (change / get_data(response, 'close', YESTERDAY_INDEX))
 
-name = "DIA ETF"
-response = requests.get('https://finnhub.io/api/v1/quote?symbol=DIA&token=bsn0ifnrh5ret9gkabfg')
-price = response.json()['c']
-change = response.json()['c'] - response.json()['pc']
-changesPercentage = (change / response.json()['pc'])
+nameDIA = "DIA ETF"
+responseDIA = requests.get('https://finnhub.io/api/v1/quote?symbol=DIA&token=bsn0ifnrh5ret9gkabfg')
+priceDIA = responseDIA.json()['c']
+changeDIA = responseDIA.json()['c'] - responseDIA.json()['pc']
+changesPercentageDIA = (changeDIA / responseDIA.json()['pc'])
+
+nameSPY = "SPY ETF"
+responseSPY = requests.get('https://finnhub.io/api/v1/quote?symbol=SPY&token=bsn0ifnrh5ret9gkabfg')
+priceSPY = responseSPY.json()['c']
+changeSPY = responseSPY.json()['c'] - responseSPY.json()['pc']
+changesPercentageSPY = (changeSPY / responseSPY.json()['pc'])
 
 
 
@@ -79,7 +85,7 @@ today_formatted = today.strftime("%m/%d/%y")
 if isHoliday(todayString):
 	data = "The market is actually closed on {} \n\nPlease enjoy your holiday! :)".format(today_formatted)
 else:
-	data = "Name: {}\nPrice: {}\nChange: {}\nChanges Percentage: {:.2%}".format(name, price, change, changesPercentage)
+	data = "Name: {}\nPrice: {}\nChange: {}\nChanges Percentage: {:.2%}\n\nName: {}\nPrice: {}\nChange: {}\nChanges Percentage: {:.2%}".format(nameDIA, priceDIA, changeDIA, changesPercentageDIA, nameSPY, priceSPY, changeSPY, changesPercentageSPY)
 
 
 
@@ -91,7 +97,7 @@ today_formatted = today.strftime("%m/%d/%y")
 #Enter email information
 fromaddr = "lynlynlynt@gmail.com"
 password = "lynlynlyn"
-toaddr = ['mingxin.ou@gmail.com','centuryib100@gmail.com']
+toaddr = ['mingxin.ou@gmail.com', 'centuryib100@gmail.com']
 
 # fakeCcList = ['fakecc@gmail.com']
 # bccList = ['bcc@gmail.com']
